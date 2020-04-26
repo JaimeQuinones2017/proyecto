@@ -20,6 +20,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <!-- AdminLTE Skins. We have chosen the skin-blue for this starter
         page. However, you can choose any other skin. Make sure you
         apply the skin class to the body tag so the changes take effect. -->
+  <!-- Latest compiled and minified CSS SELECTPICKER-->
+  <link rel="stylesheet" href="{{asset('https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/css/bootstrap-select.min.css')}}">
   <link rel="stylesheet" href="{{asset('dist/css/skins/skin-blue.min.css')}}">
 
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -179,7 +181,7 @@ desired effect
               <!-- The user image in the navbar-->
               <img src="{{asset('dist/img/user2-160x160.jpg')}}" class="user-image" alt="User Image">
               <!-- hidden-xs hides the username on small devices so only the image appears. -->
-              <span class="hidden-xs">Alexander Pierce</span>
+              <span class="hidden-xs">{{auth()->user()->name}}</span>
             </a>
             <ul class="dropdown-menu">
               <!-- The user image in the menu -->
@@ -187,7 +189,7 @@ desired effect
                 <img src="{{asset('dist/img/user2-160x160.jpg')}}" class="img-circle" alt="User Image">
 
                 <p>
-                  Jaime Quiñones - Web Developer
+                {{auth()->user()->name}} - Web Developer
                   <small>Member since Nov. 2012</small>
                 </p>
               </li>
@@ -211,8 +213,16 @@ desired effect
                 <div class="pull-left">
                   <a href="#" class="btn btn-default btn-flat">Profile</a>
                 </div>
-                <div class="pull-right">
-                  <a href="#" class="btn btn-default btn-flat">Sign out</a>
+                <div class="btn btn-default btn-flat">
+                  <a href="{{ route('logout') }}"
+                                            onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();">
+                                            Cerrar
+                                        </a>
+
+                                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                            {{ csrf_field() }}
+                                        </form>
                 </div>
               </li>
             </ul>
@@ -237,7 +247,7 @@ desired effect
           <img src="{{asset('dist/img/user2-160x160.jpg')}}" class="img-circle" alt="User Image">
         </div>
         <div class="pull-left info">
-          <p>Alexander Pierce</p>
+          <p>{{auth()->user()->name}}</p>
           <!-- Status -->
           <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
         </div>
@@ -259,19 +269,32 @@ desired effect
       <ul class="sidebar-menu" data-widget="tree">
         <li class="header">Menu</li>
         <!-- Optionally, you can add icons to the links -->
-        <li class="active"><a href="#"><i class="fa fa-usd"></i> <span>Tiquete</span></a></li>
+        <li class="active"><a href="{{url('tarifa')}}"><i class="fa fa-usd"></i> <span>Tarifa</span></a></li>
+        <li class="active"><a href="{{url('tipo_vehiculo')}}"><i class="fa fa-usd"></i> <span>Tipo de Vehiculo</span></a></li>
         <li><a href="{{url('vehiculo')}}"><i class="fa fa-send"></i> <span>Vehiculo</span></a></li>
         <li class="treeview">
-          <a href="#"><i class="fa fa-user"></i> <span>Usuarios</span>
+          <a href="#"><i class="fa fa-user"></i> <span>Personal</span>
             <span class="pull-right-container">
                 <i class="fa fa-angle-left pull-right"></i>
               </span>
           </a>
           <ul class="treeview-menu">
-            <li><a href="{{url('persona')}}">Personas</a></li>
-            <li><a href="{{url('cliente')}}">Clientes</a></li>
+            <li><a href="{{url('persona')}}"><i class="fa fa-circle-o"></i> Crear Persona</a></li>
+            <li><a href="{{url('cliente')}}"><i class="fa fa-circle-o"></i> Clientes</a></li>
           </ul>
         </li>
+        <li class="treeview">
+              <a href="#">
+                <i class="fa fa-shopping-cart"></i>
+                <span>Usuarios y Rol</span>
+                 <i class="fa fa-angle-left pull-right"></i>
+              </a>
+              <ul class="treeview-menu">
+                <li><a href="{{url('usuario')}}"><i class="fa fa-circle-o"></i> Usuario</a></li>
+                <li><a href="{{url('usuario_role')}}"><i class="fa fa-circle-o"></i> Usuario + Rol</a></li>
+                <li><a href="{{url('role')}}"><i class="fa fa-circle-o"></i> Rol</a></li>
+              </ul>
+            </li>
       </ul>
       <!-- /.sidebar-menu -->
     </section>
@@ -407,5 +430,9 @@ desired effect
      Both of these plugins are recommended to enhance the
      user experience. -->
 
+<!-- Latest compiled and minified JavaScript SELECTPICKER-->
+<script src="{{asset('https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/js/bootstrap-select.min.js')}}"></script>
+<!-- (Optional) Latest compiled and minified JavaScript translation files SELECTPICKER-->
+<script src="{{asset('https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/js/i18n/defaults-*.min.js')}}"></script>
 </body>
 </html>

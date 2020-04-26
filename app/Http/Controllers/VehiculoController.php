@@ -13,6 +13,10 @@ use DB;
 
 class VehiculoController extends Controller
 {
+public function __construct()
+ {
+ $this->middleware('auth');
+ }
     /**
      * Display a listing of the resource.
      *
@@ -35,8 +39,9 @@ class VehiculoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
+    $request->user()->authorizeRoles('admin');
         return view('Vehiculo.create');
     }
 
@@ -106,6 +111,6 @@ class VehiculoController extends Controller
     {
         $vehiculo=Vehiculo::findOrFail($id);
         $vehiculo->delete();
-        return Redirect::to('vehiculo');;
+        return Redirect::to('vehiculo');
     }
 }

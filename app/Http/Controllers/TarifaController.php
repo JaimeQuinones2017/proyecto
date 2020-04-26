@@ -1,35 +1,30 @@
 <?php
 
 namespace App\Http\Controllers;
-use Illuminate\Http\Request;
+
 use App\Http\Requests;
-use App\Cliente;
+
+
 use Illuminate\Support\Facades\Redirect;
-use App\Http\Requests\ClienteFormRequest;
+use Illuminate\Http\Request;
+use App\Tarifa;
 use DB;
 
-class ClienteController extends Controller
+class TarifaController extends Controller
 {
     public function __construct()
- {
- $this->middleware('auth');
- }
+    {
+    $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
-        if ($request)
-        {
-        $query=trim($request->get('searchText'));
-        $clientes=DB::table('clientes')->where('cedula','LIKE','%'.$query.'%')
-        ->orderBy('id','desc')
-        ->paginate(5);
-        //dd($clientes);
-        return view('Cliente.index',["clientes"=>$clientes,"searchText"=>$query]);
-        }
+        $tarifa =Tarifa::all();
+        return view('Tarifa.index')->with('tarifa',$tarifa);
     }
 
     /**
@@ -39,7 +34,10 @@ class ClienteController extends Controller
      */
     public function create()
     {
-        return view('Cliente.create');
+        $tipo_vehiculo=DB::table("tipo_vehiculos")
+        ->select('nombre','tipo_vehiculos.id')
+        ->get();
+        return view('Tarifa.create')->with('tipo_vehiculo',$tipo_vehiculo);
     }
 
     /**
@@ -50,13 +48,12 @@ class ClienteController extends Controller
      */
     public function store(Request $request)
     {
-        $clientes=new Cliente;
-        $clientes->nombre=$request->get('nombre');
-        $clientes->apellido=$request->get('apellido');
-        $clientes->cedula=$request->get('cedula');
-        $clientes->correo=$request->get('correo');
-        $clientes->save();
-        return Redirect::to('cliente');
+        $tarifa=new Tarifa;
+        $tarifa->tipo_vehiculo_id=$request->get('tipo_vehiculo_id');
+        $tarifa->valor=$request->get('valor');
+        $tarifa->estado=$request->get('estado');
+        $tarifa->save();
+        return Redirect::to('tarifa');
     }
 
     /**
@@ -78,8 +75,8 @@ class ClienteController extends Controller
      */
     public function edit($id)
     {
-        $clientes=Cliente::findOrFail($id);
-        return view("Cliente.edit",["clientes"=>$clientes]);
+        $tarifa=Tarifa::findOrFail($id);
+        return view("Tarifa.edit",["tarifa"=>$tarifa]);
     }
 
     /**
@@ -91,13 +88,12 @@ class ClienteController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $clientes=new Cliente;
-        $clientes->nombre=$request->get('nombre');
-        $clientes->apellido=$request->get('apellido');
-        $clientes->cedula=$request->get('cedula');
-        $clientes->correo=$request->get('correo');
-        $clientes->update();
-        return Redirect::to('cliente');
+        $tarifa=Tarifa::findOrFail($id);
+        $tarifa->tipo_vehiculo_id=$request->get('tipo_vehiculo_id');
+        $tarifa->valor=$request->get('valor');
+        $tarifa->estado=$request->get('estado');
+        $tarifa->update();
+        return Redirect::to('tarifa');
     }
 
     /**
@@ -108,6 +104,8 @@ class ClienteController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $tarifa=Tarifa::findOrFail($id);
+        $tarifa->delete();
+        return Redirect::to('tarifa');
     }
 }
